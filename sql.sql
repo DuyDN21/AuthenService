@@ -19,6 +19,7 @@ CREATE TABLE DemoAuthenDB.`team`(
 );
 -- create table UserTeam
 CREATE TABLE DemoAuthenDB.`user_team`(
+	id INT AUTO_INCREMENT PRIMARY KEY,
 	user_id CHAR(36),
     team_id INT,
     role_id INT -- 1: Owner, 2: Admin, 3: User
