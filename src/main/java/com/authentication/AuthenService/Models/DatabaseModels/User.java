@@ -1,4 +1,4 @@
-package com.authentication.AuthenService.Models;
+package com.authentication.AuthenService.Models.DatabaseModels;
 
 import jakarta.persistence.*;
 

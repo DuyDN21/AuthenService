@@ -1,7 +1,7 @@
 package com.authentication.AuthenService.DataAccess.Implementations;
 
 import com.authentication.AuthenService.DataAccess.Interfaces.IUserRepository;
-import com.authentication.AuthenService.Models.User;
+import com.authentication.AuthenService.Models.DatabaseModels.User;
 import jakarta.persistence.EntityManager;
 import org.hibernate.Session;
 import org.hibernate.query.Query;

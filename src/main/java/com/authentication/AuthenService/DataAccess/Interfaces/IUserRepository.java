@@ -1,6 +1,6 @@
 package com.authentication.AuthenService.DataAccess.Interfaces;
 
-import com.authentication.AuthenService.Models.User;
+import com.authentication.AuthenService.Models.DatabaseModels.User;
 
 import java.util.List;
 
