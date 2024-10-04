@@ -30,6 +30,11 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
+    public User Create(User user) {
+        return null;
+    }
+
+    @Override
     public List<User> GetAll() {
         Session currentSession = entityManager.unwrap(Session.class);
         Query<User> query = currentSession.createQuery("from user", User.class);

@@ -8,6 +8,7 @@ public interface IUserRepository {
 
     boolean IsUserExists(String username);
     User GetByUsername(String userId);
+    User Create(User user);
     List<User> GetAll();
     int Update(User user);
     int UpdateStatus(User user);

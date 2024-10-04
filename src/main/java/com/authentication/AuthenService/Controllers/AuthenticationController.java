@@ -2,11 +2,15 @@ package com.authentication.AuthenService.Controllers;
 
 import com.authentication.AuthenService.Models.RequestModels.LoginRequest;
 import com.authentication.AuthenService.Models.DatabaseModels.User;
+import com.authentication.AuthenService.Models.RequestModels.RegisterRequest;
 import com.authentication.AuthenService.Models.ResponseModels.LoginResponse;
+import com.authentication.AuthenService.Models.ResponseModels.RegisterResponse;
 import com.authentication.AuthenService.Services.Interfaces.IAuthenticationService;
 import com.authentication.Infrastructures.Enums.ResponseCodes.LoginResponseCodes;
+import com.authentication.Utils.HashingUtil;
 import io.vavr.Tuple2;
 import io.vavr.control.Either;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -27,15 +31,26 @@ public class AuthenticationController {
     public ResponseEntity<LoginResponse> DoLogin(@RequestBody LoginRequest req) {
         Either<String, Tuple2<User, String>> result = authenticationService.DoLogin(req.username(), req.password());
 
+        //login fail
         if(result.isLeft())
             return new ResponseEntity<>(
                     new LoginResponse(result.getLeft(), LoginResponseCodes.LOGIN_FAILED.getDesc(), null),
                     HttpStatus.OK);
 
+        //login success
         return new ResponseEntity<>(
                 new LoginResponse(result.get()._2(), LoginResponseCodes.LOGIN_SUCCESS.getDesc(), result.get()._1()),
                 HttpStatus.OK
         );
     }
 
+//    @RequestMapping(value = "/register", method = RequestMethod.POST)
+//    public ResponseEntity<RegisterResponse> DoRegister(@RequestBody RegisterRequest req) {
+//
+//    }
+
+    @RequestMapping(value = "/getSalt", method = RequestMethod.GET)
+    public String GenSalt(){
+        return HashingUtil.GenerateSalt();
+    }
 }
