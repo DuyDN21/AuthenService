@@ -4,6 +4,7 @@ import com.authentication.AuthenService.DataAccess.Interfaces.IUserRepository;
 import com.authentication.AuthenService.Models.DatabaseModels.User;
 import com.authentication.AuthenService.Services.Interfaces.IAuthenticationService;
 import com.authentication.Infrastructures.Enums.ResponseCodes.LoginResponseCodes;
+import com.authentication.Infrastructures.Enums.ResponseCodes.RegisterResponseCodes;
 import com.authentication.Utils.HashingUtil;
 import io.vavr.Tuple2;
 import io.vavr.control.Either;
@@ -38,8 +39,23 @@ public class AuthenticationService implements IAuthenticationService {
     }
 
     @Override
-    public Either<String, Tuple2<User, String>> DoRegister(User user) {
-        return null;
+    public Either<String, Tuple2<User, String>> DoRegister(User user, String confirmPassword) {
+        User u = userRepository.GetByUsername(user.getUsername());
+
+        //check username exist
+        if(u != null)
+            return Either.left(RegisterResponseCodes.USERNAME_EXISTED.getCode());
+        //check password and confirm password
+        if(!user.getPassword().equals(confirmPassword))
+            return Either.left(RegisterResponseCodes.USERNAME_EXISTED.getCode());
+
+        user.setPassword(HashingUtil.HashPassword(user.getPassword(), HashingUtil.GenerateSalt()));
+
+        userRepository.Create(user);
+
+        user.setPassword("");
+
+        return Either.right(new Tuple2<>(user, RegisterResponseCodes.REGISTER_SUCCESS.getCode()));
     }
 
     @Override

@@ -2,9 +2,9 @@ package com.authentication.Infrastructures.Enums.ResponseCodes;
 
 public enum RegisterResponseCodes {
 
-    LOGIN_FAILED("CONFIRM_PW_NOT_MATCH", "Register failed! Confirm password not match!"),
-    LOGIN_SUCCESS("USERNAME_EXISTED", "Register failed! Username existed!"),
-    USER_DISABLED("REGISTER_SUCCESS", "Register successful!");
+    CONFIRM_PW_NOT_MATCH("CONFIRM_PW_NOT_MATCH", "Register failed! Confirm password not match!"),
+    USERNAME_EXISTED("USERNAME_EXISTED", "Register failed! Username existed!"),
+    REGISTER_SUCCESS("REGISTER_SUCCESS", "Register successful!");
 
     private final String code;
     private final String desc;

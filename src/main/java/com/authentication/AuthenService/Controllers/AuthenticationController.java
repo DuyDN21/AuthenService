@@ -7,6 +7,7 @@ import com.authentication.AuthenService.Models.ResponseModels.LoginResponse;
 import com.authentication.AuthenService.Models.ResponseModels.RegisterResponse;
 import com.authentication.AuthenService.Services.Interfaces.IAuthenticationService;
 import com.authentication.Infrastructures.Enums.ResponseCodes.LoginResponseCodes;
+import com.authentication.Infrastructures.Enums.ResponseCodes.RegisterResponseCodes;
 import com.authentication.Utils.HashingUtil;
 import io.vavr.Tuple2;
 import io.vavr.control.Either;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/authentication")
@@ -44,10 +47,25 @@ public class AuthenticationController {
         );
     }
 
-//    @RequestMapping(value = "/register", method = RequestMethod.POST)
-//    public ResponseEntity<RegisterResponse> DoRegister(@RequestBody RegisterRequest req) {
-//
-//    }
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public ResponseEntity<RegisterResponse> DoRegister(@RequestBody RegisterRequest req) {
+        Either<String, Tuple2<User, String>> result =
+                authenticationService.DoRegister(
+                        new User(UUID.randomUUID().toString(), req.username(), req.password(), req.fullName(), req.dob().orElse(null), req.email(), true),
+                        req.confirmPassword());
+
+        if(result.isLeft())
+            return new ResponseEntity<>(
+                    new RegisterResponse(result.getLeft(), RegisterResponse., null),
+                    HttpStatus.OK
+            );
+
+        //register success
+        return new ResponseEntity<>(
+                new RegisterResponse(result.get()._2(), RegisterResponseCodes.REGISTER_SUCCESS.getDesc(), result.get()._1()),
+                HttpStatus.OK
+        );
+    }
 
     @RequestMapping(value = "/getSalt", method = RequestMethod.GET)
     public String GenSalt(){
