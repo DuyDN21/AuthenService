@@ -6,6 +6,7 @@ public enum LoginResponseCodes {
     LOGIN_SUCCESS("LOGIN_SUCCESS", "Login successful"),
     USER_DISABLED("INACTIVE_USER", "Your account is disabled, contact the administrator!");
 
+
     private final String code;
     private final String desc;
 

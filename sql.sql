@@ -5,6 +5,7 @@ CREATE TABLE DemoAuthenDB.`user`(
 	user_id CHAR(36) NOT NULL PRIMARY KEY,
     username VARCHAR(50) NOT NULL,
     `password` VARCHAR(100) NOT NULL,
+    salt VARCHAR(50) NOT NULL,
     full_name VARCHAR(100) NOT NULL,
     dob DATE,
     email VARCHAR(100),
@@ -25,10 +26,10 @@ CREATE TABLE DemoAuthenDB.`user_team`(
     role_id INT -- 1: Owner, 2: Admin, 3: User
 );
 
-Insert into DemoAuthenDB.`user`(user_id, username, `password`, full_name) values
-('dc6045bf-4e71-45e1-8ee6-3ea8c892180b', 'duydn2', '$2a$12$Ax34HrP649M11bkfju0ovuw/L/lsocUwWaIi/mqDusxwm9bPpEiAi','Do Ngoc Duy'),
-('5fc10fcf-5560-42c3-a170-3e68fa7f4efe', 'tamvt5', '$2a$12$Ax34HrP649M11bkfju0ovuw/L/lsocUwWaIi/mqDusxwm9bPpEiAi', 'Vuong Tran Tam'),
-('458129a9-d434-4fa3-92d7-ddd34272a2b2', 'anhttv2', '$2a$12$Ax34HrP649M11bkfju0ovuw/L/lsocUwWaIi/mqDusxwm9bPpEiAi','Ta Thi Van Anh');
+Insert into DemoAuthenDB.`user`(user_id, username, `password`, salt, full_name) values
+('dc6045bf-4e71-45e1-8ee6-3ea8c892180b', 'duydn2', '$2a$12$Ax34HrP649M11bkfju0ovuw/L/lsocUwWaIi/mqDusxwm9bPpEiAi', '$2a$10$RflpeCwsEFXaP5MgIcRKvO','Do Ngoc Duy'),
+('5fc10fcf-5560-42c3-a170-3e68fa7f4efe', 'tamvt5', '$2a$12$Ax34HrP649M11bkfju0ovuw/L/lsocUwWaIi/mqDusxwm9bPpEiAi', '$2a$10$3G.1953yFFqyBF9ERCP4Bu', 'Vuong Tran Tam'),
+('458129a9-d434-4fa3-92d7-ddd34272a2b2', 'anhttv2', '$2a$12$Ax34HrP649M11bkfju0ovuw/L/lsocUwWaIi/mqDusxwm9bPpEiAi', '$2a$10$iNGRRAqL/i4Wu2LrH6RVje','Ta Thi Van Anh');
 
 Insert into DemoAuthenDB.`team`(team_name, created_date) values
 ('Team 1', now()),

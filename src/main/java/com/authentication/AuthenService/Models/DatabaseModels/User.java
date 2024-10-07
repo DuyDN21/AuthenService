@@ -11,12 +11,24 @@ public class User {
     @Column private String UserId;
     @Column private String Username;
     @Column private String Password;
+    @Column private String Salt;
     @Column private String FullName;
     @Column private Date Dob;
     @Column private String Email;
     @Column private boolean IsActive;
 
     public User() {
+    }
+
+    public User(String userId, String username, String password, String salt, String fullName, Date dob, String email, boolean isActive) {
+        UserId = userId;
+        Username = username;
+        Password = password;
+        Salt = salt;
+        FullName = fullName;
+        Dob = dob;
+        Email = email;
+        IsActive = isActive;
     }
 
     public User(String userId, String username, String password, String fullName, Date dob, String email, boolean isActive) {
@@ -27,6 +39,14 @@ public class User {
         Dob = dob;
         Email = email;
         IsActive = isActive;
+    }
+
+    public String getSalt() {
+        return Salt;
+    }
+
+    public void setSalt(String salt) {
+        Salt = salt;
     }
 
     public String getUserId() {

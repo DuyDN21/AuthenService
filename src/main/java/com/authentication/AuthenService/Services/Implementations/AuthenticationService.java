@@ -21,33 +21,33 @@ public class AuthenticationService implements IAuthenticationService {
     private IUserRepository userRepository;
 
     @Override
-    public Either<String, Tuple2<User, String>> DoLogin(String username, String password) {
+    public Either<LoginResponseCodes, Tuple2<User, LoginResponseCodes>> DoLogin(String username, String password) {
         User user = userRepository.GetByUsername(username);
 
         //check if user exists
         if(user == null)
-            return Either.left(LoginResponseCodes.LOGIN_FAILED.getCode());
+            return Either.left(LoginResponseCodes.LOGIN_FAILED);
         //verify password
         if(!HashingUtil.CheckPassword(password, user.getPassword()))
-            return Either.left(LoginResponseCodes.LOGIN_FAILED.getCode());
+            return Either.left(LoginResponseCodes.LOGIN_FAILED);
         //check user status
         if(!user.isActive())
-            return Either.left(LoginResponseCodes.USER_DISABLED.getCode());
+            return Either.left(LoginResponseCodes.USER_DISABLED);
 
         user.setPassword("");
-        return Either.right(new Tuple2<>(user, LoginResponseCodes.LOGIN_SUCCESS.getCode()));
+        return Either.right(new Tuple2<>(user, LoginResponseCodes.LOGIN_SUCCESS));
     }
 
     @Override
-    public Either<String, Tuple2<User, String>> DoRegister(User user, String confirmPassword) {
+    public Either<RegisterResponseCodes, Tuple2<User, RegisterResponseCodes>> DoRegister(User user, String confirmPassword) {
         User u = userRepository.GetByUsername(user.getUsername());
 
         //check username exist
         if(u != null)
-            return Either.left(RegisterResponseCodes.USERNAME_EXISTED.getCode());
+            return Either.left(RegisterResponseCodes.USERNAME_EXISTED);
         //check password and confirm password
         if(!user.getPassword().equals(confirmPassword))
-            return Either.left(RegisterResponseCodes.USERNAME_EXISTED.getCode());
+            return Either.left(RegisterResponseCodes.CONFIRM_PW_NOT_MATCH);
 
         user.setPassword(HashingUtil.HashPassword(user.getPassword(), HashingUtil.GenerateSalt()));
 
@@ -55,7 +55,7 @@ public class AuthenticationService implements IAuthenticationService {
 
         user.setPassword("");
 
-        return Either.right(new Tuple2<>(user, RegisterResponseCodes.REGISTER_SUCCESS.getCode()));
+        return Either.right(new Tuple2<>(user, RegisterResponseCodes.REGISTER_SUCCESS));
     }
 
     @Override

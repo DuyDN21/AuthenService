@@ -32,17 +32,17 @@ public class AuthenticationController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<LoginResponse> DoLogin(@RequestBody LoginRequest req) {
-        Either<String, Tuple2<User, String>> result = authenticationService.DoLogin(req.username(), req.password());
+        Either<LoginResponseCodes, Tuple2<User, LoginResponseCodes>> result = authenticationService.DoLogin(req.username(), req.password());
 
         //login fail
         if(result.isLeft())
             return new ResponseEntity<>(
-                    new LoginResponse(result.getLeft(), LoginResponseCodes.LOGIN_FAILED.getDesc(), null),
+                    new LoginResponse(result.getLeft().getCode(), result.getLeft().getDesc(), null),
                     HttpStatus.OK);
 
         //login success
         return new ResponseEntity<>(
-                new LoginResponse(result.get()._2(), LoginResponseCodes.LOGIN_SUCCESS.getDesc(), result.get()._1()),
+                new LoginResponse(result.get()._2.getCode(), result.get()._2.getDesc(), result.get()._1()),
                 HttpStatus.OK
         );
     }
