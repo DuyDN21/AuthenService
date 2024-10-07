@@ -49,20 +49,20 @@ public class AuthenticationController {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<RegisterResponse> DoRegister(@RequestBody RegisterRequest req) {
-        Either<String, Tuple2<User, String>> result =
+        Either<RegisterResponseCodes, Tuple2<User, RegisterResponseCodes>> result =
                 authenticationService.DoRegister(
                         new User(UUID.randomUUID().toString(), req.username(), req.password(), req.fullName(), req.dob().orElse(null), req.email(), true),
                         req.confirmPassword());
 
         if(result.isLeft())
             return new ResponseEntity<>(
-                    new RegisterResponse(result.getLeft(), RegisterResponse., null),
+                    new RegisterResponse(result.getLeft().getCode(), result.getLeft().getDesc(), null),
                     HttpStatus.OK
             );
 
         //register success
         return new ResponseEntity<>(
-                new RegisterResponse(result.get()._2(), RegisterResponseCodes.REGISTER_SUCCESS.getDesc(), result.get()._1()),
+                new RegisterResponse(result.get()._2().getCode(), result.get()._2().getDesc(), result.get()._1()),
                 HttpStatus.OK
         );
     }

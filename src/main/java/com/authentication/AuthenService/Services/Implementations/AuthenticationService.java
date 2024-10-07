@@ -49,8 +49,10 @@ public class AuthenticationService implements IAuthenticationService {
         if(!user.getPassword().equals(confirmPassword))
             return Either.left(RegisterResponseCodes.CONFIRM_PW_NOT_MATCH);
 
-        user.setPassword(HashingUtil.HashPassword(user.getPassword(), HashingUtil.GenerateSalt()));
+        String salt = HashingUtil.GenerateSalt();
 
+        user.setPassword(HashingUtil.HashPassword(user.getPassword(), salt));
+        user.setSalt(salt);
         userRepository.Create(user);
 
         user.setPassword("");
