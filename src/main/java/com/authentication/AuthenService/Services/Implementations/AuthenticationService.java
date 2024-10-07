@@ -35,6 +35,8 @@ public class AuthenticationService implements IAuthenticationService {
             return Either.left(LoginResponseCodes.USER_DISABLED);
 
         user.setPassword("");
+        user.setSalt("");
+
         return Either.right(new Tuple2<>(user, LoginResponseCodes.LOGIN_SUCCESS));
     }
 
@@ -53,9 +55,11 @@ public class AuthenticationService implements IAuthenticationService {
 
         user.setPassword(HashingUtil.HashPassword(user.getPassword(), salt));
         user.setSalt(salt);
+
         userRepository.Create(user);
 
         user.setPassword("");
+        user.setSalt("");
 
         return Either.right(new Tuple2<>(user, RegisterResponseCodes.REGISTER_SUCCESS));
     }

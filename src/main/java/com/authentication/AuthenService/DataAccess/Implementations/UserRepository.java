@@ -4,6 +4,7 @@ import com.authentication.AuthenService.DataAccess.Interfaces.IUserRepository;
 import com.authentication.AuthenService.Models.DatabaseModels.User;
 import jakarta.persistence.EntityManager;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -31,7 +32,12 @@ public class UserRepository implements IUserRepository {
 
     @Override
     public User Create(User user) {
-        return null;
+        Session currentSession = entityManager.unwrap(Session.class);
+        Transaction transaction = currentSession.beginTransaction();
+        currentSession.persist(user);
+        transaction.commit();
+        currentSession.close();
+        return user;
     }
 
     @Override
