@@ -16,7 +16,8 @@ public class JwtUtil {
 
     @Autowired
     private static Environment env;
-    private static final SecretKey SECRET_KEY = Keys.hmacShaKeyFor(env.getProperty("jwt_secret_key").getBytes(StandardCharsets.UTF_8));
+    private static final SecretKey SECRET_KEY =
+            Keys.hmacShaKeyFor(env.getProperty("jwt_secret_key").getBytes(StandardCharsets.UTF_8));
     private static final String ISSUER = "AuthenticationService";
 
     public static String GenerateToken(String username, int roleId){
