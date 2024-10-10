@@ -41,6 +41,16 @@ public class AuthenticationController {
                     HttpStatus.OK);
 
         //login success
+        //create access token
+
+        //create cookie for access token
+
+        //create refresh token
+
+        //save refresh token to DB
+
+        //create cookie for refresh token
+
         return new ResponseEntity<>(
                 new LoginResponse(result.get()._2.getCode(), result.get()._2.getDesc(), result.get()._1()),
                 HttpStatus.OK

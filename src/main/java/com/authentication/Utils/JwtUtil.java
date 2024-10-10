@@ -18,9 +18,12 @@ public class JwtUtil {
     private static Environment env;
     private static final SecretKey SECRET_KEY =
             Keys.hmacShaKeyFor(env.getProperty("jwt_secret_key").getBytes(StandardCharsets.UTF_8));
+    private static final SecretKey SECRET_REFRESH_KEY =
+            Keys.hmacShaKeyFor(env.getProperty("jwt_secret_refresh_key").getBytes(StandardCharsets.UTF_8));
     private static final String ISSUER = "AuthenticationService";
+    private static final int REFRESH_TOKEN_EXPIRATION_TIME = 7 * 24 * 60 * 60 * 1000; // 1 week
 
-    public static String GenerateToken(String username, int roleId){
+    public static String GenerateAccessToken(String username, int roleId){
         Map<String, Object> claims = new HashMap<>(){};
         claims.put("role", roleId);
 
@@ -34,13 +37,44 @@ public class JwtUtil {
                 .compact();
     }
 
-    public static boolean VerifyToken(String token, int roleId){
+    public static String GenerateRefreshToken(String username){
+        return Jwts.builder()
+                .setIssuer(ISSUER)
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME))
+                .signWith(SECRET_REFRESH_KEY, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public static boolean VerifyAccessToken(String token, int roleId){
         JwtParser jwtParser =
                 Jwts.parserBuilder()
                         .setSigningKey(SECRET_KEY)
                         .requireIssuer(ISSUER)
                         .require("role", roleId)
                 .build();
+
+        try{
+            Claims claims = jwtParser.parseClaimsJws(token).getBody();
+
+            //check if token expired
+            if(claims.getExpiration().before(new Date()))
+                return false;
+
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static boolean VerifyRefreshToken(String token){
+        JwtParser jwtParser =
+                Jwts.parserBuilder()
+                        .setSigningKey(SECRET_REFRESH_KEY)
+                        .requireIssuer(ISSUER)
+                        .build();
 
         try{
             Claims claims = jwtParser.parseClaimsJws(token).getBody();
