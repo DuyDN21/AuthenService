@@ -16,6 +16,7 @@ public class User {
     @Column private Date Dob;
     @Column private String Email;
     @Column private boolean IsActive;
+    @Column private String RefreshToken;
 
     public User() {
     }
@@ -47,6 +48,14 @@ public class User {
 
     public void setSalt(String salt) {
         Salt = salt;
+    }
+
+    public String getRefreshToken() {
+        return RefreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        RefreshToken = refreshToken;
     }
 
     public String getUserId() {

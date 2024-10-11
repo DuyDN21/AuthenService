@@ -9,7 +9,8 @@ CREATE TABLE DemoAuthenDB.`user`(
     full_name VARCHAR(100) NOT NULL,
     dob DATE,
     email VARCHAR(100),
-    is_active BIT DEFAULT 1
+    is_active BIT DEFAULT 1,
+    refresh_token CHAR(50)
 );
 -- create table Team
 CREATE TABLE DemoAuthenDB.`team`(
