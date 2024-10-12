@@ -12,10 +12,10 @@ import com.authentication.Infrastructures.Enums.ResponseCodes.RegisterResponseCo
 import com.authentication.Utils.HashingUtil;
 import io.vavr.Tuple2;
 import io.vavr.control.Either;
-import org.mindrot.jbcrypt.BCrypt;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +32,7 @@ public class AuthenticationController {
     IAuthenticationService authenticationService;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseEntity<LoginResponse> DoLogin(@RequestBody LoginRequest req) {
+    public ResponseEntity<LoginResponse> DoLogin(@RequestBody LoginRequest req, HttpServletResponse response) {
         Either<LoginResponseCodes, Tuple2<UserLoginDTO, LoginResponseCodes>> result = authenticationService.DoLogin(req.username(), req.password());
 
         //login fail
@@ -42,6 +42,14 @@ public class AuthenticationController {
                     HttpStatus.OK);
 
         //login success
+        //add access token to response
+        Cookie accessTokenCookie = new Cookie("accessToken", result.get()._1().getAccessToken());
+        accessTokenCookie.setHttpOnly(true);
+        accessTokenCookie.setSecure(true);
+        accessTokenCookie.setMaxAge(15 * 60);
+        accessTokenCookie.setPath("/");
+
+        response.addCookie(accessTokenCookie);
 
         return new ResponseEntity<>(
                 new LoginResponse(result.get()._2.getCode(), result.get()._2.getDesc(), result.get()._1()),

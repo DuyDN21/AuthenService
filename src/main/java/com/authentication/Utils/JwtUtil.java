@@ -22,18 +22,15 @@ public class JwtUtil {
             Keys.hmacShaKeyFor(env.getProperty("jwt_secret_refresh_key").getBytes(StandardCharsets.UTF_8));
     private static final String ISSUER = "AuthenticationService";
     private static final int REFRESH_TOKEN_EXPIRATION_TIME = 7 * 24 * 60 * 60 * 1000; // 1 week
+    private static final int ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 15; // 15 min
 
-    public static String GenerateAccessToken(String username, int roleId){
-        Map<String, Object> claims = new HashMap<>(){};
-        claims.put("role", roleId);
-
+    public static String GenerateAccessToken(String username){
         return Jwts.builder()
                 .setIssuer(ISSUER)
                 .setSubject(username)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1h due
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))
                 .signWith(SECRET_KEY, SignatureAlgorithm.HS256)
-                .addClaims(claims)
                 .compact();
     }
 

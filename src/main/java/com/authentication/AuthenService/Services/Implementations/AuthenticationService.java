@@ -7,6 +7,7 @@ import com.authentication.AuthenService.Services.Interfaces.IAuthenticationServi
 import com.authentication.Infrastructures.Enums.ResponseCodes.LoginResponseCodes;
 import com.authentication.Infrastructures.Enums.ResponseCodes.RegisterResponseCodes;
 import com.authentication.Utils.HashingUtil;
+import com.authentication.Utils.JwtUtil;
 import io.vavr.Tuple2;
 import io.vavr.control.Either;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ public class AuthenticationService implements IAuthenticationService {
         if(!user.isActive())
             return Either.left(LoginResponseCodes.USER_DISABLED);
 
+        //generate access token
+        String accessToken = JwtUtil.GenerateAccessToken(user.getUsername());
+
         UserLoginDTO u = new UserLoginDTO(
                 user.getUsername(),
                 user.getFullName(),
@@ -42,7 +46,7 @@ public class AuthenticationService implements IAuthenticationService {
                 user.getEmail(),
                 user.isActive(),
                 user.getRefreshToken(),
-                user.getRefreshToken()
+                accessToken
         );
 
         return Either.right(new Tuple2<>(u, LoginResponseCodes.LOGIN_SUCCESS));
