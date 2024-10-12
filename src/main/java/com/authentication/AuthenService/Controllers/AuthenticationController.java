@@ -51,6 +51,15 @@ public class AuthenticationController {
 
         response.addCookie(accessTokenCookie);
 
+        //add refresh token to response
+        Cookie refreshTokenCookie = new Cookie("refreshToken", result.get()._1().getRefreshToken());
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setSecure(true);
+        refreshTokenCookie.setMaxAge(7 * 24 * 60 * 60);
+        refreshTokenCookie.setPath("/");
+
+        response.addCookie(refreshTokenCookie);
+
         return new ResponseEntity<>(
                 new LoginResponse(result.get()._2.getCode(), result.get()._2.getDesc(), result.get()._1()),
                 HttpStatus.OK
