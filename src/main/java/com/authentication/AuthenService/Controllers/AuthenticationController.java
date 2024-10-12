@@ -1,5 +1,6 @@
 package com.authentication.AuthenService.Controllers;
 
+import com.authentication.AuthenService.Models.DTOs.UserLoginDTO;
 import com.authentication.AuthenService.Models.RequestModels.LoginRequest;
 import com.authentication.AuthenService.Models.DatabaseModels.User;
 import com.authentication.AuthenService.Models.RequestModels.RegisterRequest;
@@ -32,7 +33,7 @@ public class AuthenticationController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<LoginResponse> DoLogin(@RequestBody LoginRequest req) {
-        Either<LoginResponseCodes, Tuple2<User, LoginResponseCodes>> result = authenticationService.DoLogin(req.username(), req.password());
+        Either<LoginResponseCodes, Tuple2<UserLoginDTO, LoginResponseCodes>> result = authenticationService.DoLogin(req.username(), req.password());
 
         //login fail
         if(result.isLeft())
@@ -41,15 +42,6 @@ public class AuthenticationController {
                     HttpStatus.OK);
 
         //login success
-        //create access token
-
-        //create cookie for access token
-
-        //create refresh token
-
-        //save refresh token to DB
-
-        //create cookie for refresh token
 
         return new ResponseEntity<>(
                 new LoginResponse(result.get()._2.getCode(), result.get()._2.getDesc(), result.get()._1()),

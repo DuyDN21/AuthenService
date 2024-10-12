@@ -1,6 +1,7 @@
 package com.authentication.AuthenService.Services.Implementations;
 
 import com.authentication.AuthenService.DataAccess.Interfaces.IUserRepository;
+import com.authentication.AuthenService.Models.DTOs.UserLoginDTO;
 import com.authentication.AuthenService.Models.DatabaseModels.User;
 import com.authentication.AuthenService.Services.Interfaces.IAuthenticationService;
 import com.authentication.Infrastructures.Enums.ResponseCodes.LoginResponseCodes;
@@ -21,7 +22,7 @@ public class AuthenticationService implements IAuthenticationService {
     private IUserRepository userRepository;
 
     @Override
-    public Either<LoginResponseCodes, Tuple2<User, LoginResponseCodes>> DoLogin(String username, String password) {
+    public Either<LoginResponseCodes, Tuple2<UserLoginDTO, LoginResponseCodes>> DoLogin(String username, String password) {
         User user = userRepository.GetByUsername(username);
 
         //check if user exists
@@ -34,10 +35,17 @@ public class AuthenticationService implements IAuthenticationService {
         if(!user.isActive())
             return Either.left(LoginResponseCodes.USER_DISABLED);
 
-        user.setPassword("");
-        user.setSalt("");
+        UserLoginDTO u = new UserLoginDTO(
+                user.getUsername(),
+                user.getFullName(),
+                user.getDob(),
+                user.getEmail(),
+                user.isActive(),
+                user.getRefreshToken(),
+                user.getRefreshToken()
+        );
 
-        return Either.right(new Tuple2<>(user, LoginResponseCodes.LOGIN_SUCCESS));
+        return Either.right(new Tuple2<>(u, LoginResponseCodes.LOGIN_SUCCESS));
     }
 
     @Override
